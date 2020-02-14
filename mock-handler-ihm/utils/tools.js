@@ -15,7 +15,7 @@ var glob = require("glob");
 const suppress = function suppressRoutesForEndpoint(serverFile,expressRouter) {
     console.log('Info : les routes de l\'api vont être supprimées ...');
     expressRouter.forEach(route => {
-        if (route.route && route.route['path'].includes(mapInstanceWithEndpoint.get(serverFile).toString(),)) {
+        if (route.route && route.route['path'].includes(mapInstanceWithEndpoint.get(serverFile).toString())) {
             expressRouter.splice(expressRouter.indexOf(route), 1);
             console.log('Delete : ' + route.route['path']);
         }
@@ -27,15 +27,16 @@ const suppress = function suppressRoutesForEndpoint(serverFile,expressRouter) {
  */
 const runFile = function runJsFileServer(jsFile, app) {
     try {
-        var instanceOfJsFile = require( fixDirectoryFile + jsFile.toString())(app);
+        var instanceOfJsFile = require( fixDirectoryFile + jsFile);
+        instanceOfJsFile.startApi(app);
         instanceSrv.push(jsFile);
-        mapInstanceWithEndpoint.set(jsFile,instanceOfJsFile);
-        console.log('Chargement réussi ...');
+        mapInstanceWithEndpoint.set(jsFile,instanceOfJsFile.baseEndpoint);
+        console.log('Chargement réussi ...\n');
+        return true;
     } catch (err) {
-        console.error('Erreur : ' + jsFile);
-        console.error('========');
-        console.error(err);
-        console.error('========');
+        console.error('Erreur : fichier  ' + jsFile);
+        console.log('Chargement échoué ... \n');
+       return false;
     }
 };
 /**
@@ -44,9 +45,10 @@ const runFile = function runJsFileServer(jsFile, app) {
  */
 const initLoad = function(localisationMockedApp, express) {
     console.log('Init du serveur le ' + new Date());
-    console.log(localisationMockedApp);
+    console.log('Detection des fichiers.. \n');
     glob(localisationMockedApp  + "/*.js", {}, function (er, files) {
-        console.log(files);
+        console.log('Fichiers présents : ');
+        console.log(files +'\n');
         files.forEach(file => {
             console.log('Chargement du fichier : ' + file);
             runFile(file, express);

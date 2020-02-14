@@ -1,4 +1,4 @@
-const baseEndpoint = '/projet2';
+const baseEndpoint = '/projet1';
 
 
 
@@ -11,7 +11,7 @@ const listenCall = function (express) {
         console.log('i will catch it ');
         res.status(200).jsonp('Ok 3 ');
 
-    });
+
     express.get(baseEndpoint + '/test2', (req, res) => {
         console.log('i will change it');
         res.status(200).jsonp('Ok 2');

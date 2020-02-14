@@ -15,10 +15,14 @@ const fileServerPrefix = 'server-';
 var localisationMockedApp = "./app-mocked/*";
 // IMPORT des utils
 var tools = require('./utils/tools.js');
-
+/**
+ * Chargement initial
+ */
 tools.initLoad(localisationMockedApp, app);
 
-
+/**
+ * Permet de restart une api en lui passant son nom
+ */
 app.get(mainApi, (req, res) => {
     var serverFile = tools.findFile(req.query.servername);
     console.log('Handler mock for : ' + req.query.servername);
@@ -26,10 +30,21 @@ app.get(mainApi, (req, res) => {
         console.log('Info: le fichier ' + serverFile + ' va être redemarrer...');
         delete require.cache[require.resolve(serverFile)];
         tools.suppress(serverFile, app._router.stack);
-        tools.runFile(serverFile, app);
+
+        const returnOfFileLoad =   tools.runFile(serverFile, app);
+        if (returnOfFileLoad) {
+            res.status(200).jsonp('Api restarted');
+        } else {
+            res.status(500).jsonp('Erreur dans l\'api,  redemarrage arreté' );
+        }
     } else {
         console.log('Le fichier n\'était pas chargé, il va être chargé');
-        tools.runFile(serverFile, app);
+          const returnOfFileLoad =   tools.runFile(serverFile, app);
+          if (returnOfFileLoad) {
+              res.status(200).jsonp('Api restarted');
+          } else {
+              res.status(500).jsonp('Erreur dans l\'api,  redemarrage arreté' );
+          }
     }
 });
 
@@ -37,5 +52,4 @@ app.get(mainApi, (req, res) => {
 
 // LAUNCH SERVER
 app.listen(port, () => {
-    console.log("Express server started");
 });
