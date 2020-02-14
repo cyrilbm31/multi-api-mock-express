@@ -14,12 +14,12 @@ var glob = require("glob");
  */
 const suppress = function suppressRoutesForEndpoint(serverFile,expressRouter) {
     console.log('Info : les routes de l\'api vont être supprimées ...');
-    expressRouter.forEach(route => {
-        if (route.route && route.route['path'].includes(mapInstanceWithEndpoint.get(serverFile).toString())) {
-            expressRouter.splice(expressRouter.indexOf(route), 1);
-            console.log('Delete : ' + route.route['path']);
-        }
-    });
+    expressRouter.filter (route => route.route &&
+        route.route['path'].includes(mapInstanceWithEndpoint.get(serverFile).toString()))
+        .forEach( routeTemp => {
+            console.log('Delete : ' + routeTemp.route['path']);
+            expressRouter.splice(expressRouter.indexOf(routeTemp), 1);
+        });
 };
 /**
  * Permet d'ajouter un fichier de server au main server seulement si celui ci est valide
@@ -36,11 +36,11 @@ const runFile = function runJsFileServer(jsFile, app) {
     } catch (err) {
         console.error('Erreur : fichier  ' + jsFile);
         console.log('Chargement échoué ... \n');
-       return false;
+        return false;
     }
 };
 /**
-* Initialise le server en chargeant tous les server js valides
+ * Initialise le server en chargeant tous les server js valides
  * @param localisationMockedApp
  */
 const initLoad = function(localisationMockedApp, express) {
