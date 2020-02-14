@@ -1,0 +1,4 @@
+*/node_modules/*
+.idea/*
+*/.idea/*
+mock-handler-ihm/package-lock.json

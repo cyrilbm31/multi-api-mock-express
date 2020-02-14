@@ -1,0 +1,13 @@
+{
+  "name": "mock-handler-ihm",
+  "version": "1.0.0",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "glob": "^7.1.6"
+  },
+  "scripts": {
+    "start": "node main-server.js"
+  }
+}
