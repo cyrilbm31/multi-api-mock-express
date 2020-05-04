@@ -1,0 +1,8 @@
+{
+  "connectionSuccess" : {
+    "connect" : true
+  },
+  "connectionRefused" : {
+    "connect" : true
+  }
+}
